@@ -5,17 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>non-being ad nauseam</title>
     <style> body {padding: 0; margin: 0;} </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
     <script src="js/thingie-icon.js"></script>
+    <script src="js/drag-thingie.js"></script>
     <style>
-    html, body{
-      background: #1db5a1;
-    }
+    html {
+        background: url('assets/thisone.png') no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+
+        -webkit-tap-highlight-color:transparent;
+      }
+
+      div {
+        -webkit-user-select: none; /* Chrome/Safari */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+ */
+
+        /* Not implemented yet */
+        -o-user-select: none;
+        user-select: none;
+
+        -webkit-tap-highlight-color:transparent;
+      }
     </style>
   </head>
   <body>
-    <script src="js/drag-thingie.js"></script>
-
   </body>
 </html>

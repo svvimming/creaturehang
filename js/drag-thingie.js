@@ -68,6 +68,9 @@ function mousePressed(){
   }
 }
 
+
+
+
 function changeState() {
   if (drawing) {
     drawing = false;
@@ -93,6 +96,7 @@ function eraserState() {
     drawing = false;
     button.style('color', 'black');
     eraserStroke.show();
+
   }
 }
 
@@ -114,8 +118,12 @@ function draw() {
   } else if (erasing){
     if (mouseIsPressed) {
       noStroke();
-      fill('#1db5a1');
+      fill(255);
       circle(mouseX, mouseY, eraserStroke.value());
+      erase();
+      noStroke();
+      ellipse(mouseX, mouseY, eraserStroke.value()+1);
+      noErase();
     }
   } else {
     for (j=0; j<rects.length; j++){
