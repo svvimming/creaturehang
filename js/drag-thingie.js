@@ -1,50 +1,128 @@
 
 let rects = [];
-let icons;
-let growth, ball, guavas, ip, ipp, octo, orange, sponge;
+let icons = [];
 let zp33dz;
 let backgrnd;
 
-function preload(){
-  growth = loadImage('assets/icons/growth-swirl.png');
-  ball = loadImage('assets/icons/growthball.png');
-  guavas = loadImage('assets/icons/guavas.png');
-  ip = loadImage('assets/icons/ip.png');
-  ipp = loadImage('assets/icons/ip2.png');
-  octo = loadImage('assets/icons/octo.png');
-  orange = loadImage('assets/icons/orange-ip.png');
-  sponge = loadImage('assets/icons/sponge-ip.png');
+let button;
+let divs = [];
+let sliders = [];
+var resiZer;
+var drawing = false;
+var erasing = false;
 
-  zp33dz = loadImage('assets/zp33dz.png');
+let paths = [
+  'assets/icons/growth-swirl.png',
+  'assets/icons/growthball.png',
+  'assets/icons/guavas.png',
+  'assets/icons/ip.png',
+  'assets/icons/ip2.png',
+  'assets/icons/octo.png',
+  'assets/icons/orange-ip.png',
+  'assets/icons/sponge-ip.png'
+];
+
+function preload(){
+  for(let i=0; i<paths.length; i++) {
+    icons[i] = loadImage(paths[i]);
+  }
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  icons = [growth, ball, guavas, ip, ipp, octo, orange, sponge];
 
   for (i = 0; i < icons.length; i++) {
-    rects[i] = new Icon(icons[i], random(50, 80), random(50,windowWidth-80), random(50,windowHeight-80), null);
+    var size = random(50, 80);
+    var x = random(50,windowWidth-80);
+    var y = random(50,windowHeight-80);
+    rects[i] = new Icon(icons[i], size, x, y, null, i);
+    divs[i] = createImg(paths[i]);
+    divs[i].position(x, y);
+    divs[i].style('width', size+'px');
+    divs[i].style('height', size+'px');
 
+    sliders[i] = createSlider(0.1, 3, 1, 0.1);
+    sliders[i].position(x + size/2, y-20);
+    sliders[i].style('width', '80px');
+    sliders[i].attribute('draggable', 'false');
+    sliders[i].hide();
   }
-  let newPatch = createDiv('creaturehang');
-  newPatch.position(random(200, windowWidth-200),random(200, windowHeight-200));
 
-  // push();
-  // tint(255, 200);
-  // //backgrnd = image(zp33dz, 300, 300, windowWidth-580, windowHeight-300, 0, 0, 874, 681);
-  // backgrnd = image(zp33dz, 0, 0, windowWidth, windowHeight, 0, 0, 874, 681);
-  // pop();
+  button = createButton('draw mode');
+  button.position(10, 10);
+  button.mousePressed(changeState);
+
+  eraser = createButton('erase mode');
+  eraser.position(10 + 80, 10);
+  eraser.mousePressed(eraserState);
+
+  eraserStroke = createSlider(1, 100, 10, 1);
+  eraserStroke.position(10 + 80, 30);
+  eraserStroke.style('width', '80px');
+  eraserStroke.hide();
 }
 
 function mousePressed(){
   for (j=0; j<rects.length; j++){
-    rects[j].clicked();
     rects[j].intersected();
   }
 }
 
-function draw() {
-  for (j=0; j<rects.length; j++){
-    rects[j].display();
+function changeState() {
+  if (drawing) {
+    drawing = false;
+    button.style('color', 'black');
+
+  } else {
+    drawing = true;
+    button.style('color', 'red');
+    erasing = false;
+    eraser.style('color', 'black');
+    eraserStroke.hide();
   }
+}
+
+function eraserState() {
+  if (erasing) {
+    erasing = false;
+    eraser.style('color', 'black');
+    eraserStroke.hide();
+  } else {
+    erasing = true;
+    eraser.style('color', 'red');
+    drawing = false;
+    button.style('color', 'black');
+    eraserStroke.show();
+  }
+}
+
+function resize(index) {
+  divs[index].style('width', rects[index].w*sliders[index].value()+'px');
+  divs[index].style('height', rects[index].h*sliders[index].value()+'px');
+  rects[index].width = rects[index].w*sliders[index].value();
+  rects[index].height = rects[index].h*sliders[index].value();
+}
+
+function draw() {
+  // clear();
+  if (drawing) {
+    for (j=0; j<rects.length; j++){
+      resize(j);
+      rects[j].move();
+      rects[j].display();
+    }
+  } else if (erasing){
+    if (mouseIsPressed) {
+      noStroke();
+      fill('#1db5a1');
+      circle(mouseX, mouseY, eraserStroke.value());
+    }
+  } else {
+    for (j=0; j<rects.length; j++){
+      resize(j);
+      rects[j].move();
+
+    }
+  }
+
 }
